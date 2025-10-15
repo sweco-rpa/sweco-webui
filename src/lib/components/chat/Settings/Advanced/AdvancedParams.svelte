@@ -51,6 +51,34 @@
 	$: if (params) {
 		onChange(params);
 	}
+		
+	// Automatically set max_tokens based on the selected model
+	import { models, settings } from '$lib/stores';
+
+		let activeModel: any;
+
+
+	$: if ($models?.length) {
+		const selectedModelId = $settings?.models?.[0];
+
+		// Match by ID or prefix
+		activeModel =
+			$models.find(
+				(m) =>
+					m.id === selectedModelId ||
+					(selectedModelId && m.id.startsWith(selectedModelId)) || // <- check it's defined
+					m.name === selectedModelId
+			) || $models[0];
+		console.log('Resolved active model:', activeModel);  //for debugging
+
+		// Set max_tokens directly from the active model
+		if (activeModel?.maxOutputTokens && (params.max_tokens === null || params.max_tokens === undefined)) {
+			params = { ...params, max_tokens: activeModel.maxOutputTokens };
+			console.log('Set default max_tokens from activeModel:', params.max_tokens); //for debugging
+		}
+	}
+
+	
 </script>
 
 <div class=" space-y-1 text-xs pb-safe-bottom">
@@ -509,7 +537,7 @@
 						id="steps-range"
 						type="range"
 						min="-2"
-						max="131072"
+						max={activeModel?.maxOutputTokens || 131072}
 						step="1"
 						bind:value={params.max_tokens}
 						class="w-full h-2 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
