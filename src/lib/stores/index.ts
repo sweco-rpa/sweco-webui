@@ -288,3 +288,8 @@ export type SessionUser = {
 	role: string;
 	profile_image_url: string;
 };
+
+
+
+// exports the selected models id to, so it can be used in AdvancedParams.svelte
+export const selectedModelId: Writable<string | null> = writable(null);

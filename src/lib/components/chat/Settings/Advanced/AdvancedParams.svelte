@@ -51,6 +51,24 @@
 	$: if (params) {
 		onChange(params);
 	}
+		
+	// Automatically set max_tokens based on the selected model
+	import { models, selectedModelId} from '$lib/stores';
+
+
+		let activeModel: any;
+
+	$: if ($models?.length && $selectedModelId) {
+		const activeModel = $models.find(
+			(m) =>
+				m.id === $selectedModelId ||
+				m.id.startsWith($selectedModelId) ||
+				m.name === $selectedModelId
+		) || $models[0];
+
+		console.log('Active model based on selection:', activeModel);
+	}
+
 </script>
 
 <div class=" space-y-1 text-xs pb-safe-bottom">
@@ -509,7 +527,7 @@
 						id="steps-range"
 						type="range"
 						min="-2"
-						max="131072"
+						max={activeModel?.maxOutputTokens || 131072}
 						step="1"
 						bind:value={params.max_tokens}
 						class="w-full h-2 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"

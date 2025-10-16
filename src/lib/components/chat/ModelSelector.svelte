@@ -43,6 +43,13 @@
 			$models.map((m) => m.id).includes(model) ? model : ''
 		);
 	}
+
+	import { selectedModelId } from '$lib/stores';
+	
+
+	$: if (selectedModels[0] !== $selectedModelId) {
+		selectedModelId.set(selectedModels[0]);
+	}
 </script>
 
 <div class="flex flex-col w-full items-start">
