@@ -66,7 +66,7 @@
 				m.name === $selectedModelId
 		) || $models[0];
 
-		console.log('Active model based on selection:', activeModel);
+		console.log('Active model based on selection: ', activeModel);
 	}
 
 </script>
