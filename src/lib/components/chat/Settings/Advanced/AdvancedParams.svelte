@@ -59,7 +59,7 @@
 		let activeModel: any;
 
 	$: if ($models?.length && $selectedModelId) {
-		const activeModel = $models.find(
+		activeModel = $models.find(
 			(m) =>
 				m.id === $selectedModelId ||
 				m.id.startsWith($selectedModelId) ||
