@@ -18,7 +18,6 @@
 
 	import Spinner from '$lib/components/common/Spinner.svelte';
 	import OnBoarding from '$lib/components/OnBoarding.svelte';
-	import SensitiveInput from '$lib/components/common/SensitiveInput.svelte';
 	import { redirect } from '@sveltejs/kit';
 
 	const i18n = getContext('i18n');
@@ -32,7 +31,7 @@
 	let name = '';
 	let email = '';
 	let password = '';
-	let confirmPassword = '';
+
 
 	let ldapUsername = '';
 
@@ -66,12 +65,6 @@
 	};
 
 	const signUpHandler = async () => {
-		if ($config?.features?.enable_signup_password_confirmation) {
-			if (password !== confirmPassword) {
-				toast.error($i18n.t('Passwords do not match.'));
-				return;
-			}
-		}
 
 		const sessionUser = await userSignUp(name, email, password, generateInitialsImage(name)).catch(
 			(error) => {
@@ -92,13 +85,17 @@
 	};
 
 	const submitHandler = async () => {
-		if (mode === 'ldap') {
-			await ldapSignInHandler();
-		} else if (mode === 'signin') {
-			await signInHandler();
-		} else {
-			await signUpHandler();
-		}
+	    // Automatically set email/password for dev login
+	    email = `${name.toLowerCase().replace(/\s/g, '')}@example.com`;
+	    password = 'local-dev-password';
+
+	    if (mode === 'ldap') {
+	        await ldapSignInHandler();
+	    } else if (mode === 'signin') {
+	        await signInHandler();
+	    } else {
+	        await signUpHandler();
+	    }
 	};
 
 	const oauthCallbackHandler = async () => {
@@ -301,58 +298,9 @@
 												/>
 											</div>
 										{:else}
-											<div class="mb-2">
-												<label for="email" class="text-sm font-medium text-left mb-1 block"
-													>{$i18n.t('Email')}</label
-												>
-												<input
-													bind:value={email}
-													type="email"
-													id="email"
-													class="my-0.5 w-full text-sm outline-hidden bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-600"
-													autocomplete="email"
-													name="email"
-													placeholder={$i18n.t('Enter Your Email')}
-													required
-												/>
-											</div>
+											<input type="hidden" bind:value={email} />
 										{/if}
-
-										<div>
-											<label for="password" class="text-sm font-medium text-left mb-1 block"
-												>{$i18n.t('Password')}</label
-											>
-											<SensitiveInput
-												bind:value={password}
-												type="password"
-												id="password"
-												class="my-0.5 w-full text-sm outline-hidden bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-600"
-												placeholder={$i18n.t('Enter Your Password')}
-												autocomplete={mode === 'signup' ? 'new-password' : 'current-password'}
-												name="password"
-												required
-											/>
-										</div>
-
-										{#if mode === 'signup' && $config?.features?.enable_signup_password_confirmation}
-											<div class="mt-2">
-												<label
-													for="confirm-password"
-													class="text-sm font-medium text-left mb-1 block"
-													>{$i18n.t('Confirm Password')}</label
-												>
-												<SensitiveInput
-													bind:value={confirmPassword}
-													type="password"
-													id="confirm-password"
-													class="my-0.5 w-full text-sm outline-hidden bg-transparent"
-													placeholder={$i18n.t('Confirm Your Password')}
-													autocomplete="new-password"
-													name="confirm-password"
-													required
-												/>
-											</div>
-										{/if}
+											<input type="hidden" bind:value={password} />
 									</div>
 								{/if}
 								<div class="mt-5">
@@ -372,8 +320,8 @@
 												{mode === 'signin'
 													? $i18n.t('Sign in')
 													: ($config?.onboarding ?? false)
-														? $i18n.t('Create Admin Account')
-														: $i18n.t('Create Account')}
+														? $i18n.t('Chose Name')
+														: $i18n.t('Chose Name')}
 											</button>
 
 											{#if $config?.features.enable_signup && !($config?.onboarding ?? false)}
