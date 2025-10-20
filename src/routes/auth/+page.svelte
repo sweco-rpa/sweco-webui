@@ -320,8 +320,8 @@
 												{mode === 'signin'
 													? $i18n.t('Sign in')
 													: ($config?.onboarding ?? false)
-														? $i18n.t('Create Admin Account')
-														: $i18n.t('Create Account')}
+														? $i18n.t('Chose Name')
+														: $i18n.t('Chose Name')}
 											</button>
 
 											{#if $config?.features.enable_signup && !($config?.onboarding ?? false)}
