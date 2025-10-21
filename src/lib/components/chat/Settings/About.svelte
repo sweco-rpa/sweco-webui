@@ -38,9 +38,6 @@
 			return '';
 		});
 
-		if ($config?.features?.enable_version_update_check) {
-			checkForVersionUpdates();
-		}
 	});
 </script>
 
@@ -59,19 +56,6 @@
 						<Tooltip content={WEBUI_BUILD_HASH}>
 							v{WEBUI_VERSION}
 						</Tooltip>
-
-						{#if $config?.features?.enable_version_update_check}
-							<a
-								href="https://github.com/open-webui/open-webui/releases/tag/v{version.latest}"
-								target="_blank"
-							>
-								{updateAvailable === null
-									? $i18n.t('Checking for updates...')
-									: updateAvailable
-										? `(v${version.latest} ${$i18n.t('available!')})`
-										: $i18n.t('(latest)')}
-							</a>
-						{/if}
 					</div>
 
 					<button
