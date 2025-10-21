@@ -4,23 +4,12 @@
 	const i18n = getContext('i18n');
 
 	import Cog6 from '$lib/components/icons/Cog6.svelte';
-	import ArenaModelModal from './ArenaModelModal.svelte';
 	export let model;
 
 	let showModel = false;
 </script>
 
-<ArenaModelModal
-	bind:show={showModel}
-	edit={true}
-	{model}
-	on:submit={async (e) => {
-		dispatch('edit', e.detail);
-	}}
-	on:delete={async () => {
-		dispatch('delete');
-	}}
-/>
+
 
 <div class="py-0.5">
 	<div class="flex justify-between items-center mb-1">
