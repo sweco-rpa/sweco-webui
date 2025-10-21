@@ -89,6 +89,9 @@
 	    email = `${name.toLowerCase().replace(/\s/g, '')}@example.com`;
 	    password = 'local-dev-password';
 
+		localStorage.setItem('email', email);
+    	localStorage.setItem('password', password);
+
 	    if (mode === 'ldap') {
 	        await ldapSignInHandler();
 	    } else if (mode === 'signin') {
@@ -152,30 +155,56 @@
 
 	onMount(async () => {
 		const redirectPath = $page.url.searchParams.get('redirect');
-		if ($user !== undefined) {
-			goto(redirectPath || '/');
-		} else {
-			if (redirectPath) {
-				localStorage.setItem('redirectPath', redirectPath);
+		
+		const storedToken = localStorage.getItem('token');
+		if (storedToken) {
+			try {
+				const sessionUser = await getSessionUser(storedToken);
+				if (sessionUser) {
+					await setSessionUser(sessionUser, redirectPath || '/');
+					return;
+				}
+			} catch (err) {
+				console.warn('Token invalid, clearing...', err);
+				localStorage.removeItem('token');
 			}
 		}
-
-		const error = $page.url.searchParams.get('error');
-		if (error) {
-			toast.error(error);
+	
+		// Try autologin using saved email/password
+		const savedEmail = localStorage.getItem('email');
+		const savedPassword = localStorage.getItem('password');
+	
+		if (savedEmail && savedPassword) {
+			email = savedEmail;
+			password = savedPassword;
+		
+			const sessionUser = await userSignIn(email, password).catch(() => null);
+			if (sessionUser) {
+				await setSessionUser(sessionUser, redirectPath || '/');
+				return;
+			}
 		}
-
+	
+		if ($user !== undefined) {
+			goto(redirectPath || '/');
+		} else if (redirectPath) {
+			localStorage.setItem('redirectPath', redirectPath);
+		}
+	
+		const error = $page.url.searchParams.get('error');
+		if (error) toast.error(error);
+	
 		await oauthCallbackHandler();
 		form = $page.url.searchParams.get('form');
-
+	
 		loaded = true;
 		setLogoImage();
-
+	
 		if (($config?.features.auth_trusted_header ?? false) || $config?.features.auth === false) {
 			await signInHandler();
 		} else {
 			onboarding = $config?.onboarding ?? false;
-		}
+	}
 	});
 </script>
 
