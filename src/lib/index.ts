@@ -5,7 +5,7 @@ export async function initFoundryConnection() {
 	const res = await fetch('/port.txt');
 	if (!res.ok) return;
 	const port = (await res.text()).trim();
-	const foundryURL = `http://localhost:${port}/v1`;
+	const foundryURL = `http://127.0.0.1:${port}/v1`;
 
 	const openaiConfig = await getOpenAIConfig(localStorage.token);
 	if (!openaiConfig.OPENAI_API_BASE_URLS.includes(foundryURL)) {
@@ -18,3 +18,4 @@ export async function initFoundryConnection() {
 		console.log(`✅ Foundry connection added automatically: ${foundryURL}`);
 	}
 }
+
