@@ -662,30 +662,6 @@
 									<div class=" self-center">{$i18n.t('Connections')}</div>
 								</button>
 							{/if}
-						{:else if tabId === 'audio'}
-							<button
-								role="tab"
-								aria-controls="tab-audio"
-								aria-selected={selectedTab === 'audio'}
-								class={`px-0.5 md:px-2.5 py-1 min-w-fit rounded-xl flex-1 md:flex-none flex text-left transition
-								${
-									selectedTab === 'audio'
-										? ($settings?.highContrastMode ?? false)
-											? 'dark:bg-gray-800 bg-gray-200'
-											: ''
-										: ($settings?.highContrastMode ?? false)
-											? 'hover:bg-gray-200 dark:hover:bg-gray-800'
-											: 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'
-								}`}
-								on:click={() => {
-									selectedTab = 'audio';
-								}}
-							>
-								<div class=" self-center mr-2">
-									<SoundHigh strokeWidth="2" />
-								</div>
-								<div class=" self-center">{$i18n.t('Audio')}</div>
-							</button>
 						{:else if tabId === 'account'}
 							<button
 								role="tab"
@@ -716,24 +692,6 @@
 					<div class="text-center text-gray-500 mt-4">
 						{$i18n.t('No results found')}
 					</div>
-				{/if}
-				{#if $user?.role === 'admin'}
-					<a
-						href="/admin/settings"
-						class="px-0.5 md:px-2.5 py-1 min-w-fit rounded-xl flex-1 md:flex-none md:mt-auto flex text-left transition {$settings?.highContrastMode
-							? 'hover:bg-gray-200 dark:hover:bg-gray-800'
-							: 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-						on:click={async (e) => {
-							e.preventDefault();
-							await goto('/admin/settings');
-							show = false;
-						}}
-					>
-						<div class=" self-center mr-2">
-							<UserBadgeCheck strokeWidth="2" />
-						</div>
-						<div class=" self-center">{$i18n.t('Admin Settings')}</div>
-					</a>
 				{/if}
 			</div>
 			<div class="flex-1 px-3.5 md:pl-0 md:pr-4.5 md:min-h-[36rem] max-h-[36rem]">
