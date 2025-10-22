@@ -473,14 +473,6 @@
 			// If no expiry time is set, do nothing
 			return;
 		}
-
-		if (now >= exp - TOKEN_EXPIRY_BUFFER) {
-			const res = await userSignOut();
-			user.set(null);
-			localStorage.removeItem('token');
-
-			location.href = res?.redirect_url ?? '/auth';
-		}
 	};
 
 	onMount(async () => {
