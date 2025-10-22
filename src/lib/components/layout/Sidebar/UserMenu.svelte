@@ -170,20 +170,6 @@
 				</DropdownMenu.Item>
 			{/if}
 
-			<hr class=" border-gray-50 dark:border-gray-800 my-1 p-0" />
-
-			<DropdownMenu.Item
-				class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-				on:click={async () => {
-					const res = await userSignOut();
-					user.set(null);
-					localStorage.removeItem('token');
-
-					location.href = res?.redirect_url ?? '/auth';
-					show = false;
-				}}
-			>
-			</DropdownMenu.Item>
 
 			{#if usage}
 				{#if usage?.user_ids?.length > 0}
@@ -200,23 +186,6 @@
 								getUsageInfo();
 							}}
 						>
-							<div class=" flex items-center">
-								<span class="relative flex size-2">
-									<span
-										class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
-									/>
-									<span class="relative inline-flex rounded-full size-2 bg-green-500" />
-								</span>
-							</div>
-
-							<div class=" ">
-								<span class="">
-									{$i18n.t('Active Users')}:
-								</span>
-								<span class=" font-semibold">
-									{usage?.user_ids?.length}
-								</span>
-							</div>
 						</div>
 					</Tooltip>
 				{/if}
