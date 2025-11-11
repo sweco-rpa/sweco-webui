@@ -4,6 +4,8 @@ import time
 import datetime
 import logging
 from aiohttp import ClientSession
+import json
+import os
 
 from open_webui.models.auths import (
     AddUserForm,
@@ -456,6 +458,23 @@ async def ldap_auth(request: Request, response: Response, form_data: LdapForm):
         raise HTTPException(400, detail="LDAP authentication failed.")
 
 
+####
+#Json storage
+####
+USER_JSON_FILE = "user.json"
+def save_user_to_json(user_data: dict):
+    with open(USER_JSON_FILE, "w") as f:
+        json.dump(user_data, f)
+
+def load_user_from_json():
+    if os.path.exists(USER_JSON_FILE):
+        with open(USER_JSON_FILE, "r") as f:
+            return json.load(f)
+    return None
+
+
+
+
 ############################
 # SignIn
 ############################
@@ -463,6 +482,11 @@ async def ldap_auth(request: Request, response: Response, form_data: LdapForm):
 
 @router.post("/signin", response_model=SessionUserResponse)
 async def signin(request: Request, response: Response, form_data: SigninForm):
+
+    user_data = load_user_from_json()
+    if user_data:
+        form_data.email = user_data["email"]
+        form_data.password = user_data["password"]
     if WEBUI_AUTH_TRUSTED_EMAIL_HEADER:
         if WEBUI_AUTH_TRUSTED_EMAIL_HEADER not in request.headers:
             raise HTTPException(400, detail=ERROR_MESSAGES.INVALID_TRUSTED_HEADER)
@@ -634,6 +658,7 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
                 samesite=WEBUI_AUTH_COOKIE_SAME_SITE,
                 secure=WEBUI_AUTH_COOKIE_SECURE,
             )
+            save_user_to_json({"email": user.email, "password": form_data.password})
 
             if request.app.state.config.WEBHOOK_URL:
                 await post_webhook(
