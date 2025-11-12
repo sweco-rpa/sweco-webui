@@ -48,6 +48,7 @@
 	<div class="w-full h-screen max-h-[100dvh] text-white relative">
 		<div class="fixed m-10 z-50">
 			<div class="flex space-x-2">
+
 				<div class=" self-center">
 					<img
 						id="logo"
@@ -57,6 +58,7 @@
 						alt="logo"
 					/>
 				</div>
+
 			</div>
 		</div>
 

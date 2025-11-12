@@ -215,7 +215,7 @@
 							</div>
 						</div>
 					{/if}
-
+					<!--
 					<div class="my-2">
 						<Knowledge bind:selectedItems={data.files}>
 							<div slot="label">
@@ -226,7 +226,7 @@
 								</div>
 							</div>
 						</Knowledge>
-					</div>
+					</div> -->
 
 					<div class="flex justify-end pt-3 text-sm font-medium gap-1.5">
 						<button

@@ -614,7 +614,7 @@
 				src={model?.info?.meta?.profile_image_url ??
 					($i18n.language === 'dg-DG'
 						? `${WEBUI_BASE_URL}/doge.png`
-						: `${WEBUI_BASE_URL}/static/model.png`)}
+						: `${WEBUI_BASE_URL}/static/favicon.png`)}
 				className={'size-7 assistant-message-profile-image !rounded-none'}
 			/>
 		</div>

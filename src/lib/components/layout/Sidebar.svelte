@@ -682,16 +682,20 @@
 			>
 
 				<img
-					crossorigin="anonymous"
-					src="{WEBUI_BASE_URL}/static/favicon.png"
-					class="dark:invert p-0.5"
-					id="logo"
-					alt="logo"
-					style="max-height: 56px; max-width: 128px;"
+								crossorigin="anonymous"
+								src="{WEBUI_BASE_URL}/static/favicon.png"
+								class="sidebar-new-chat-icon size-6 rounded-full group-hover:hidden"
+								alt=""
 				/>
 
 
 				<a href="/" class="flex flex-1 px-1.5" on:click={newChatHandler}>
+					<div
+						id="sidebar-webui-name"
+						class=" self-center font-medium text-gray-850 dark:text-white font-primary"
+					>
+						{$WEBUI_NAME}
+					</div>
 				</a>
 				<Tooltip
 					content={$showSidebar ? $i18n.t('Close Sidebar') : $i18n.t('Open Sidebar')}

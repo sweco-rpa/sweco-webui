@@ -114,6 +114,18 @@
 										.join(', ')}
 									placement="top"
 								>
+								<img
+								crossorigin="anonymous"
+								src={model?.info?.meta?.profile_image_url ??
+									($i18n.language === 'dg-DG'
+										? `${WEBUI_BASE_URL}/doge.png`
+										: `${WEBUI_BASE_URL}/static/favicon.png`)}
+								class=" size-9 @sm:size-10 rounded-full mr-2 border-[1px] border-gray-100 dark:border-none"
+								alt="logo"
+								aria-hidden="true"
+								draggable="false"
+							/>
+
 								<span class="line-clamp-1">
 									<p>
  										 <span>{ $i18n.t("How can I help you today,") }</span>
