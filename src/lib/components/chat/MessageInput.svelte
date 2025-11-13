@@ -1644,7 +1644,7 @@
 
 									<div class="self-end flex space-x-1 mr-1 shrink-0">
 										{#if (!history?.currentId || history.messages[history.currentId]?.done == true) && ($_user?.role === 'admin' || ($_user?.permissions?.chat?.stt ?? true))}
-											<!-- {$i18n.t('Record voice')} -->
+											<!-- {$i18n.t('Record voice')} 
 											<Tooltip content={$i18n.t('Dictate')}>
 												<button
 													id="voice-input-button"
@@ -1719,7 +1719,7 @@
 											</div>
 										{:else if prompt === '' && files.length === 0 && ($_user?.role === 'admin' || ($_user?.permissions?.chat?.call ?? true))}
 											<div class=" flex items-center">
-												<!-- {$i18n.t('Call')} -->
+												
 												<Tooltip content={$i18n.t('Voice mode')}>
 													<button
 														class=" bg-black text-white hover:bg-gray-900 dark:bg-white dark:text-black dark:hover:bg-gray-100 transition rounded-full p-1.5 self-center"
@@ -1779,7 +1779,7 @@
 														<Voice className="size-5" strokeWidth="2.5" />
 													</button>
 												</Tooltip>
-											</div>
+											</div>-->
 										{:else}
 											<div class=" flex items-center">
 												<Tooltip content={$i18n.t('Send message')}>

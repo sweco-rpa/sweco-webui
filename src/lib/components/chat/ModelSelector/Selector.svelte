@@ -13,6 +13,7 @@
 	import { goto } from '$app/navigation';
 
 	import { deleteModel, getOllamaVersion, pullModel, unloadModel } from '$lib/apis/ollama';
+	import DownloadIcon from '$lib/components/icons/Download.svelte';
 
 	import {
 		user,
@@ -45,6 +46,13 @@
 	export let searchEnabled = true;
 	export let searchPlaceholder = $i18n.t('Search a model');
 
+	// Default models to be included in the items array
+    const defaultModels = 
+	[ { label: 'qwen (1.9 GB)', value: 'qwen', model: { name: 'qwen2.5:3b',connection_type: 'local', tags: [], download: { meta: { description: 'A default model, click to download' } } } }, 
+	  { label: 'gemma (3,3 GB)', value: 'gemma', model: { name: 'gemma3:4b',connection_type: 'local', tags: [], download: { meta: { description: 'default model, click to download' } } } },
+	  { label: 'llama (2.0 GB)', value: 'llama', model: { name: 'llama3.2:latest',connection_type: 'local', tags: [], download: { meta: { description: 'default model, click to download' } } } }
+     ];
+
 	export let items: {
 		label: string;
 		value: string;
@@ -52,6 +60,16 @@
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		[key: string]: any;
 	}[] = [];
+
+	// Combine defaults with real models (from parent/store)
+	// $: itemsWithDefaults = defaultModels.concat(items);
+
+	// Auto-remove default placeholder models when the real model appears
+	$: itemsWithDefaults = [
+		...defaultModels.filter(d => !items.some(i => i.model.name === d.model.name)),
+		...items
+	];
+
 
 	export let className = 'w-[32rem]';
 	export let triggerClassName = 'text-lg';
@@ -64,7 +82,8 @@
 	let tags = [];
 
 	let selectedModel = '';
-	$: selectedModel = items.find((item) => item.value === value) ?? '';
+	$: selectedModel = itemsWithDefaults.find((item) => item.value === value) ?? '';
+
 
 	let searchValue = '';
 
@@ -74,16 +93,13 @@
 	let ollamaVersion = null;
 	let selectedModelIdx = 0;
 
-	const fuse = new Fuse(
-		items.map((item) => {
-			const _item = {
-				...item,
-				modelName: item.model?.name,
-				tags: (item.model?.tags ?? []).map((tag) => tag.name).join(' '),
-				desc: item.model?.info?.meta?.description
-			};
-			return _item;
-		}),
+	$: fuse = new Fuse(
+		itemsWithDefaults.map((item) => ({
+			...item,
+			modelName: item.model?.name,
+			tags: (item.model?.tags ?? []).map((t) => t.name).join(' '),
+			desc: item.model?.info?.meta?.description
+		})),
 		{
 			keys: ['value', 'tags', 'modelName'],
 			threshold: 0.4
@@ -114,7 +130,8 @@
 							return item.model?.direct;
 						}
 					})
-			: items
+					
+			: itemsWithDefaults
 					.filter((item) => {
 						if (selectedTag === '') {
 							return true;
@@ -274,6 +291,15 @@
 						$config?.features?.enable_direct_connections && ($settings?.directConnections ?? null)
 					)
 				);
+
+				// hide default from dropdown
+				items = items.filter(i => i.model.name !== sanitizedModelTag);
+
+				// optional: set downloaded flag so icon disappears
+				const idx = items.findIndex(i => i.model.name === sanitizedModelTag);
+				if (idx >= 0) {
+					items[idx].model.downloaded = true;
+				}
 			} else {
 				toast.error($i18n.t('Download canceled'));
 			}
@@ -291,8 +317,8 @@
 	};
 
 	onMount(async () => {
-		if (items) {
-			tags = items
+		if (itemsWithDefaults) {
+			tags = itemsWithDefaults
 				.filter((item) => !(item.model?.info?.meta?.hidden ?? false))
 				.flatMap((item) => item.model?.tags ?? [])
 				.map((tag) => tag.name);
@@ -424,7 +450,7 @@
 			{/if}
 
 			<div class="px-2">
-				{#if tags && items.filter((item) => !(item.model?.info?.meta?.hidden ?? false)).length > 0}
+				{#if tags && itemsWithDefaults.filter((item) => !(item.model?.info?.meta?.hidden ?? false)).length > 0}
 					<div
 						class=" flex w-full bg-white dark:bg-gray-850 overflow-x-auto scrollbar-none font-[450] mb-0.5"
 						on:wheel={(e) => {
@@ -438,7 +464,7 @@
 							class="flex gap-1 w-fit text-center text-sm rounded-full bg-transparent px-1.5 whitespace-nowrap"
 							bind:this={tagsContainerElement}
 						>
-							{#if items.find((item) => item.model?.connection_type === 'local') || items.find((item) => item.model?.connection_type === 'external') || items.find((item) => item.model?.direct) || tags.length > 0}
+							{#if itemsWithDefaults.find((item) => item.model?.connection_type === 'local') || itemsWithDefaults.find((item) => item.model?.connection_type === 'external') || itemsWithDefaults.find((item) => item.model?.direct) || tags.length > 0}
 								<button
 									class="min-w-fit outline-none px-1.5 py-0.5 {selectedTag === '' &&
 									selectedConnectionType === ''
@@ -454,7 +480,7 @@
 								</button>
 							{/if}
 
-							{#if items.find((item) => item.model?.connection_type === 'local')}
+							{#if itemsWithDefaults.find((item) => item.model?.connection_type === 'local')}
 								<button
 									class="min-w-fit outline-none px-1.5 py-0.5 {selectedConnectionType === 'local'
 										? ''
@@ -469,7 +495,7 @@
 								</button>
 							{/if}
 
-							{#if items.find((item) => item.model?.connection_type === 'external')}
+							{#if itemsWithDefaults.find((item) => item.model?.connection_type === 'external')}
 								<button
 									class="min-w-fit outline-none px-1.5 py-0.5 {selectedConnectionType === 'external'
 										? ''
@@ -484,7 +510,7 @@
 								</button>
 							{/if}
 
-							{#if items.find((item) => item.model?.direct)}
+							{#if itemsWithDefaults.find((item) => item.model?.direct)}
 								<button
 									class="min-w-fit outline-none px-1.5 py-0.5 {selectedConnectionType === 'direct'
 										? ''
@@ -529,11 +555,23 @@
 						{value}
 						{pinModelHandler}
 						{unloadModelHandler}
-						onClick={() => {
+						onClick={async () => {
 							value = item.value;
 							selectedModelIdx = index;
 
 							show = false;
+
+							 // Check if it exists on the server
+							const modelName = item.model.name;
+
+    						const exists = $models.some(m => m.name === modelName);
+
+
+							if (!exists) {
+								// Trigger download
+								searchValue = item.model.name;   // required by pullModelHandler
+								await pullModelHandler();
+							}
 						}}
 					/>
 				{:else}
