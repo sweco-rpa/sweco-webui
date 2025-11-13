@@ -548,6 +548,7 @@
 		{#if !$config?.metadata?.auth_logo_position}
 			<div class="fixed m-10 z-50">
 				<div class="flex space-x-2">
+					  <!-- 
 					<div class=" self-center">
 						<img
 							id="logo"
@@ -557,6 +558,7 @@
 							alt=""
 						/>
 					</div>
+					-->
 				</div>
 			</div>
 		{/if}

@@ -19,6 +19,7 @@
 	import { slide } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { WEBUI_BASE_URL } from '$lib/constants';
 
 	import ShareChatModal from '../chat/ShareChatModal.svelte';
 	import ModelSelector from '../chat/ModelSelector.svelte';
@@ -78,7 +79,7 @@
 		
 
 		<div class=" flex max-w-full w-full mx-auto px-1.5 md:px-2 pt-0.5 bg-transparent">
-			<div class="flex items-center w-full max-w-full">
+			<div class="flex items-center w-full max-w-full relative">
 				{#if $mobile && !$showSidebar}
 					<div
 						class="-translate-x-0.5 mr-1 mt-1 self-start flex flex-none items-center text-gray-600 dark:text-gray-400"
@@ -97,20 +98,37 @@
 						</Tooltip>
 					</div>
 				{/if}
+				
 
 				<div
 					class="flex-1 overflow-hidden max-w-full py-0.5
 			{$showSidebar ? 'ml-1' : ''}
 			"
 				>
+
+				
 					{#if showModelSelector}
 						<ModelSelector bind:selectedModels showSetDefault={!shareEnabled} />
 					{/if}
 				</div>
 
+				<!-- logo centrerad i mitten -->
+				<div class="absolute inset-y-0 left-1/2 transform -translate-x-1/2 flex items-center justify-center mb-1">
+				<img
+					crossorigin="anonymous"
+					src="{WEBUI_BASE_URL}/static/sweco_favicon.png"
+					class="dark:invert p-2"
+					id="logo"
+					alt="logo"
+					style="max-height: 54px; max-width: 128px;"
+				/>
+				</div> 
+
+
 				<div class="self-start flex flex-none items-center text-gray-600 dark:text-gray-400">
 					<!-- <div class="md:hidden flex self-center w-[1px] h-5 mx-2 bg-gray-300 dark:bg-stone-700" /> -->
 
+		             
 					{#if $user?.role === 'user' ? ($user?.permissions?.chat?.temporary ?? true) && !($user?.permissions?.chat?.temporary_enforced ?? false) : true}
 						{#if !chat?.id}
 							<Tooltip content={$i18n.t(`Temporary Chat`)}>

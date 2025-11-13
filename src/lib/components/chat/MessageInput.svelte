@@ -1716,7 +1716,7 @@
 														</svg>
 													</button>
 												</Tooltip>
-											</div>
+											</div> 
 										{:else if prompt === '' && files.length === 0 && ($_user?.role === 'admin' || ($_user?.permissions?.chat?.call ?? true))}
 											<div class=" flex items-center">
 												
@@ -1779,7 +1779,7 @@
 														<Voice className="size-5" strokeWidth="2.5" />
 													</button>
 												</Tooltip>
-											</div>-->
+											</div> -->
 										{:else}
 											<div class=" flex items-center">
 												<Tooltip content={$i18n.t('Send message')}>
