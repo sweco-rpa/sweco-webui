@@ -71,7 +71,7 @@
 							placeholder={$i18n.t('Select a model')}
 							items={$models.map((model) => ({
 								value: model.id,
-								label: model.name,
+								label: model.name.replace(/[^a-zA-Z-].*$/, '').trim(),
 								model: model
 							}))}
 							{pinModelHandler}

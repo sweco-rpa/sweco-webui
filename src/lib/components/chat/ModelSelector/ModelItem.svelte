@@ -88,7 +88,7 @@
 			<div class="flex items-center">
 				<Tooltip content={`${item.label} (${item.value})`} placement="top-start">
 					<div class="line-clamp-1">
-						{item.label}
+						 {item.label.replace(/[^a-zA-Z-].*$/, '').trim()}
 					</div>
 				</Tooltip>
 			</div>
@@ -223,6 +223,32 @@
 						</div>
 					</Tooltip>
 				{/if}
+
+				
+				{#if item.model?.download?.meta?.description}
+					<Tooltip content={`${marked.parse(
+						sanitizeResponseContent(item.model?.download.meta.description).replaceAll('\n', '<br>')
+						)}`}>
+						<div class="translate-y-[1px]">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="w-4 h-4"
+						>
+							<path d="M6 20L18 20" stroke-linecap="round" stroke-linejoin="round"></path>
+							<path
+							d="M12 4V16M12 16L15.5 12.5M12 16L8.5 12.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							></path>
+						</svg>
+						</div>
+					</Tooltip>
+				{/if}
+
 			</div>
 		</div>
 	</div>
