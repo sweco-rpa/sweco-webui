@@ -708,6 +708,7 @@
 	"Features": "Funktioner",
 	"Features Permissions": "Funktionsbehörigheter",
 	"February": "februari",
+	"Send Feedback": "Skicka feedback",
 	"Feedback Details": "Feedbackdetaljer",
 	"Feedback History": "Feedbackhistorik",
 	"Feedbacks": "Återkopplingar",
@@ -1731,5 +1732,6 @@
 	"Your entire contribution will go directly to the plugin developer; Open WebUI does not take any percentage. However, the chosen funding platform might have its own fees.": "Hela ditt bidrag går direkt till pluginutvecklaren; Open WebUI tar ingen procentandel. Däremot kan den valda finansieringsplattformen ha egna avgifter.",
 	"YouTube": "Youtube",
 	"Youtube Language": "Youtube-språk",
-	"Youtube Proxy URL": "Youtube Proxy URL"
+	"Youtube Proxy URL": "Youtube Proxy URL",
+	"HelpDescription": "Sweco-webui är din lokala AI-chatt som fungerar helt utan internetuppkoppling.\nAI-modellen har begränsad förståelse för svenska, därför rekommenderar vi att du använder engelska för bästa resultat. För bästa kvalitet och mer heltäckande svar när du har internet rekommenderas att du använder SwecoGPT (onlineversionen).\n\nAI-modellens hastighet hänger på din dators prestanda och minne. Har du inte tillräckligt med minne så kan du inte ladda ner de större modellerna.\nDefault-modellen som används är väldigt enkel och liten i storlek, därför blir svaren inte lika avancerade.\n\nI sidomenyn hittar du din chatthistorik, där du kan organisera konversationer i mappar för enklare struktur och översikt.\nVarje enskild chatt kan:\n\n• döpas om\n• arkiveras\n• tas bort\n\nDetta gör det enkelt att hålla ordning och hitta tillbaka till tidigare konversationer."
 }

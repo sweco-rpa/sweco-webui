@@ -708,6 +708,7 @@
 	"Features": "",
 	"Features Permissions": "",
 	"February": "",
+	"Send Feedback": "Send Feedback",
 	"Feedback Details": "",
 	"Feedback History": "",
 	"Feedbacks": "",
@@ -1731,5 +1732,6 @@
 	"Your entire contribution will go directly to the plugin developer; Open WebUI does not take any percentage. However, the chosen funding platform might have its own fees.": "",
 	"YouTube": "",
 	"Youtube Language": "",
-	"Youtube Proxy URL": ""
+	"Youtube Proxy URL": "",
+	"HelpDescription": "Sweco-webui is your local AI chat that works completely without internet.\nThe AI model has limited understanding of Swedish, so we recommend using English for the best results. For higher quality answers when you have internet access, we recommend using SwecoGPT (the online version).\n\nThe AI model's speed depends on your computer's performance and memory. If you don't have enough memory, you cannot download the larger models.\nThe default model is very small and simple, so its answers will not be as advanced.\n\nIn the sidebar you will find your chat history, where you can organize conversations into folders for better structure and overview.\nEach individual chat can be:\n\n• renamed\n• archived\n• deleted\n\nThis makes it easy to stay organized and return to previous conversations."
 }

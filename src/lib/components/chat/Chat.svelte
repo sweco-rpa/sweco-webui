@@ -2,6 +2,8 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { toast } from 'svelte-sonner';
 	import { PaneGroup, Pane, PaneResizer } from 'paneforge';
+	import InfoCircle from '../icons/InfoCircle.svelte';
+    import QuestionMarkCircle from '../icons/QuestionMarkCircle.svelte';
 
 	import { getContext, onDestroy, onMount, tick } from 'svelte';
 	const i18n: Writable<i18nType> = getContext('i18n');
@@ -2230,6 +2232,31 @@
 			toast.error($i18n.t('Failed to move chat'));
 		}
 	};
+
+
+	// new code for the help menu
+	let showHelpMenu = false;
+	let showHelpModal = false;
+
+	const openHelp = () => {
+		showHelpMenu = false;
+		showHelpModal = true;
+	};
+
+	const closeMenu = () => (showHelpMenu = false);
+
+	if (typeof window !== "undefined") {
+		window.addEventListener("click", closeMenu);
+	}
+
+	// E-postadress som feedback ska skickas till
+	const feedbackEmail = "mohammad.rahimi@sweco.se";
+
+	const openFeedback = () => {
+		// Öppnar standardmailklienten (Outlook, Gmail etc.)
+		window.location.href = `mailto:${feedbackEmail}?subject=Sweco-WebUI Feedback`;
+	};
+
 </script>
 
 <svelte:head>
@@ -2280,6 +2307,7 @@
 				<div
 					class="absolute top-0 left-0 w-full h-full bg-linear-to-t from-white to-white/85 dark:from-gray-900 dark:to-gray-900/90 z-0"
 				/>
+				<div><i class="fa-regular fa-circle-question info-icon" id="info-icon"></i></div>
 			{:else if $settings?.backgroundImageUrl ?? $config?.license_metadata?.background_image_url ?? null}
 				<div
 					class="absolute {$showSidebar
@@ -2513,7 +2541,110 @@
 					{eventTarget}
 				/>
 			</PaneGroup>
+			
 		</div>
+
+		<!-- HELP BUTTON -->
+<div class="flex justify-end items-center space-x-2">
+<div class="relative">
+	<Tooltip content="Help & Feedback" placement="left">
+		<button
+			class="cursor-pointer flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition group"
+			on:click={(e) => {
+				e.stopPropagation();
+				e.preventDefault();
+				showHelpMenu = !showHelpMenu;
+			}}
+			draggable="false"
+			aria-label="Help & Feedback"
+		>
+			<div class="self-center flex items-center justify-center size-9">
+				<QuestionMarkCircle className="size-7" />
+			</div>
+		</button>
+	</Tooltip>
+
+	<!-- FLOATING PANEL -->
+	{#if showHelpMenu}
+		<div
+			class="absolute left-[-12rem] bottom-0 mb-1 w-48 bg-white dark:bg-gray-900
+	      		 border border-gray-200 dark:border-gray-700 rounded-xl
+	       		shadow-xl z-50"
+			on:click|stopPropagation
+		>
+			<button
+				class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+				on:click={() => openHelp()}
+			>
+			<InfoCircle className="inline-flex w-5 h-5" />  
+				{$i18n.t('Help')}
+			</button>
+
+			<button
+					class="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+					on:click={() => openFeedback()}
+				>
+					<svg
+						class="w-5 h-5"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						stroke-width="1.8"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M8 12h8m0 0l-3-3m3 3l-3 3M4 6h16v12H4z"
+						/>
+					</svg>
+
+					{$i18n.t('Send Feedback')}
+				</button>
+
+
+		</div>
+	{/if}
+
+</div>
+</div>
+
+{#if showHelpModal}
+	<div
+		class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999]"
+		on:click={() => (showHelpModal = false)}
+	>
+		<div
+			class="bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-300 dark:border-gray-700 max-w-2xl max-h-[80vh] w-full overflow-hidden flex flex-col"
+			on:click|stopPropagation
+		>
+			<!-- TOP NAVBAR -->
+			<div class="sticky top-0 flex items-center w-full pl-3 pr-6 bg-[#F2F2F2] dark:bg-black text-black dark:text-white border-b border-gray-300 dark:border-gray-700 transition-colors duration-300 px-6 py-4 justify-between">
+			<div class="flex items-center gap-2">
+			<InfoCircle class="w-5 h-5" />   <!-- ikon på vänster sida -->
+			<h2 class="text-lg font-semibold whitespace-nowrap">{$i18n.t('Help')}</h2>
+			</div>
+
+				<button
+					class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition"
+					on:click={() => (showHelpModal = false)}
+					aria-label="Close help window"
+				>
+					✕
+				</button>
+			</div>
+
+			<!-- CONTENT -->
+			<div class="p-6 overflow-y-auto text-sm leading-relaxed whitespace-pre-line">
+				
+				{$i18n.t('HelpDescription')}
+
+			</div>
+		</div>
+	</div>
+{/if}
+
+
 	{:else if loading}
 		<div class=" flex items-center justify-center h-full w-full">
 			<div class="m-auto">
@@ -2521,4 +2652,5 @@
 			</div>
 		</div>
 	{/if}
+	
 </div>
