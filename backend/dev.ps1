@@ -1,10 +1,17 @@
-# Use Python 3.12 if PYTHON312_HOME is set
-if ($env:PYTHON_HOME) {
-    $PythonExe = Join-Path $env:PYTHON_HOME "python.exe"
-} else {
-    # fallback to whatever 'python' is in PATH
-    $PythonExe = "python"
+# Always use the embedded Python shipped with the app
+$PythonExe = Join-Path $PSScriptRoot "..\..\..\runtimes\python\python.exe"
+
+if (-not (Test-Path $PythonExe)) {
+    Write-Host "ERROR: Embedded Python not found at: $PythonExe"
+    Write-Host "Expected path relative to this script: ..\..\..\runtimes\python\python.exe"
+    exit 1
 }
+
+# Normalize to an absolute path (avoids path quirks)
+$PythonExe = (Resolve-Path $PythonExe).Path
+
+# Ensure embedded Python is first in PATH (helps any subprocesses)
+$env:Path = (Split-Path $PythonExe) + ";" + $env:Path
 
 # Set environment variables
 $env:CORS_ALLOW_ORIGIN = "http://localhost:5173;http://localhost:8080"
@@ -14,5 +21,9 @@ if (-not $env:PORT) {
     $env:PORT = 8080
 }
 
-# Run uvicorn using the correct Python
+# Optional: print which Python is used (good for troubleshooting)
+Write-Host "Using Python: $PythonExe"
+& $PythonExe -c "import sys; print('sys.executable:', sys.executable)"
+
+# Run uvicorn using the embedded Python
 & $PythonExe -m uvicorn open_webui.main:app --port $env:PORT --host 0.0.0.0 --reload
